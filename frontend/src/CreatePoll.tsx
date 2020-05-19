@@ -129,7 +129,7 @@ return(
       </Form.Item>
 
       <Form.Item  name="ban_tor"  valuePropName="checked">
-        <Checkbox>Ban Tor user</Checkbox>
+        <Checkbox>Ban Tor users</Checkbox>
       </Form.Item>
 
       <Form.Item className="submit_btn">
