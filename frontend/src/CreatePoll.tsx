@@ -13,28 +13,33 @@ const { Option } = Select;
 
 function CreatePoll(){
 
-//   const handleLogin = (token) => {
-//     let login_data={,'g-recaptcha-response': token}
-//     axios("http://localhost/login", {
-//       method: "post",
-//       data: login_data,
-//       withCredentials: true
-//     }).then((resp)=>{
+  const create_poll = (token:string,values:any) => {
+    let data={
+      question:values.question,
+      security_level:values.fraud_prevention,
+      require_captcha:values.captcha,
+      ban_tor:values.ban_tor,
+      options:values.options,
+      'g-recaptcha-response': token
+    }
+    axios("http://localhost/create_poll", {
+      method: "post",
+      data: data
+    }).then((resp)=>{
+      console.log(resp)
+    }).catch((err)=>{
 
-//       console.log(resp)
-//     }).catch((err)=>{
-
-//     })
-//   };
-//   const _handleLogin = () => {
-//     /*global grecaptcha*/ // defined in public/index.html
-//     grecaptcha.ready(function() {
-//       grecaptcha.execute('6LcqV9QUAAAAAEybBVr0FWnUnFQmOVxGoQ_Muhtb', {action: 'login'}).then(function(token) {
-//         handleLogin(token)
-//       });
-//       })
-// }
+    })
+  };
+  const _create_poll = (values:any) => {
+    grecaptcha.ready(function() {
+      grecaptcha.execute('6LcqV9QUAAAAAEybBVr0FWnUnFQmOVxGoQ_Muhtb', {action: 'login'}).then(function(token:string) {
+        create_poll(token,values)
+      });
+      })
+}
   const onFinish = (values: any) => {
+    _create_poll(values)
     console.log('Success:', values);
   };
 
@@ -46,11 +51,10 @@ return(
   <Layout> 
     <Content className="content">
           <Row justify="center">
-  
       <Card>
       <Form
       name="basic"
-      initialValues={{ captcha: false,fraud_prevention:"cookie_ip",ban_tor:false }}
+      initialValues={{ captcha: false,fraud_prevention:"2",ban_tor:false }}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
@@ -118,9 +122,9 @@ return(
       
       <Form.Item name="fraud_prevention" label="Fraud prevention" rules={[{ required: true }]}>
         <Select>
-          <Option value="cookie">cookie</Option>
-          <Option value="cookie_ip">cookie+ip</Option>
-          <Option value="cookie_ip_challenge">cookie+ip+anti bot protection</Option>
+          <Option value="1">cookie</Option>
+          <Option value="2">cookie+ip</Option>
+          <Option value="3">cookie+ip+anti bot protection</Option>
         </Select>
       </Form.Item>
 
