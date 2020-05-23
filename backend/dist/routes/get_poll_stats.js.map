@@ -1,1 +1,0 @@
-{"version":3,"file":"get_poll_stats.js","sourceRoot":"","sources":["../../src/routes/get_poll_stats.tsx"],"names":[],"mappings":"AAAA,SAAS,cAAc,CAAE,GAAG,EAAC,GAAG;IAC/B,IAAI,GAAG,CAAC,OAAO,CAAC,MAAM,KAAK,SAAS,EAAE;QAC/B,GAAG,CAAC,IAAI,CAAC,0FAA0F,CAAC,CAAA;KACvG;SAAM;QACH,GAAG,CAAC,QAAQ,CAAC,QAAQ,CAAC,CAAA;KACzB;AACL,CAAC;AAED,iCAAiC;AACjC,MAAM,CAAC,OAAO,GAAC,cAAc,CAAA"}
