@@ -31,11 +31,6 @@ async function insertDocuments(collection_name:string, documents:Object[]) {
     // let result = await collection.insertMany(documents);
     // return result
 }
-async function updateDocument(collection_name:string,selector:object,update:object) {
-  const collection = client.db(db_main).collection(collection_name);
-  collection.updateOne(selector, { $set: update })
-  // let result= await collection.updateOne(selector, { $set: update })
-}
 
 async function addToArrayInDocument(collection_name:string,selector:object,update:object) {
     const collection = client.db(db_main).collection(collection_name);
@@ -48,7 +43,7 @@ async function generate_id() {
             if (ex) {
                 reject("error");
             }
-            let id = buffer.toString("base64")
+            let id = buffer.toString("base64").replace(/\/|=|[+]/g, '')
             let users = await find_poll_by_id(id) //check if id exists
             if (users.length === 0) {
                 resolve(id);
@@ -68,7 +63,7 @@ export async function find_poll_by_id(id:string) {
     return poll
 }
 
-export async function create_new_poll(question:string,options:Object[],security_level:string,require_captcha:Boolean,ban_tor:Boolean) {
+export async function create_new_poll(question:string,options:Object[],security_level:string,require_captcha:Boolean,ban_tor:Boolean,allow_multiple_answers:Boolean) {
     let id=await generate_id()
     insertDocuments("polls", [{
         id:id,
@@ -77,14 +72,19 @@ export async function create_new_poll(question:string,options:Object[],security_
         security_level:security_level,
         require_captcha:require_captcha,
         ban_tor:ban_tor,
+        allow_multiple_answers:allow_multiple_answers,
         ips:[]
     }])
     return id
 }
 
-export async function vote(poll_id:string,options_id:string) {
-    const collection = client.db(db_main).collection("poll");
-    let result =collection.updateOne({id: poll_id,"options.id":options_id}, { $inc: { numbers: 1}})
+export async function vote_by_id(poll_id: string, options: string[]) {
+    const collection = client.db(db_main).collection("polls");
+    const result = collection.findOneAndUpdate(
+        { id: poll_id },
+        { $inc: { "options.$[t].votes": 1 }, },
+        { arrayFilters: [{ "t.text": { $in: options } }], returnOriginal: false },
+    )
     return result
 }
 
