@@ -7,22 +7,24 @@ async function create_poll(req: Request, res: Response) {
     const question: string = req.body.question
     const require_captcha: Boolean = req.body.require_captcha
     const ban_tor: Boolean = req.body.ban_tor
+    const allow_multiple_answers: Boolean = req.body.allow_multiple_answers
     if (typeof security_level === 'string' &&
         typeof question === 'string' &&
         typeof require_captcha === 'boolean' &&
         typeof ban_tor === 'boolean' &&
-        typeof req.body.options === 'object'&&
+        typeof allow_multiple_answers === 'boolean' &&
+        Array.isArray(req.body.options) &&
         req.body.options.length>0) {
         console.log(5)
         let options=[]
         for (let i = 0; i < req.body.options.length; i++) {
             if (typeof req.body.options[i] === "string") {
-                options.push({ id: i, text: req.body.options[i], votes: 0 })
+                options.push({text: req.body.options[i], votes: 0 })
             } else {
                 return res.send("Bad options")
             }
         }
-        const poll_id = await create_new_poll(question, options, security_level, require_captcha, ban_tor)
+        const poll_id = await create_new_poll(question, options,security_level, require_captcha, ban_tor,allow_multiple_answers)
         res.send(poll_id)
     }
 }
