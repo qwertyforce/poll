@@ -20,6 +20,7 @@ function CreatePoll(){
       require_captcha:values.captcha,
       ban_tor:values.ban_tor,
       options:values.options,
+      allow_multiple_answers:values.allow_multiple_answers,
       'g-recaptcha-response': token
     }
     axios("http://localhost/create_poll", {
@@ -54,7 +55,7 @@ return(
       <Card>
       <Form
       name="basic"
-      initialValues={{ captcha: false,fraud_prevention:"2",ban_tor:false }}
+      initialValues={{ captcha: false,fraud_prevention:"2",ban_tor:false,options: [undefined],allow_multiple_answers:false}}
       onFinish={onFinish}
       onFinishFailed={onFinishFailed}
     >
@@ -70,7 +71,7 @@ return(
         {(fields, { add, remove }) => {
           return (
             <div>
-              {fields.map((field, index) => (
+               {fields.map((field, index) => (
                 <Form.Item
                   required={false}
                   key={field.key}
@@ -87,20 +88,20 @@ return(
                     ]}
                     noStyle
                   >
-                    <div className="fff">
                     <Input  placeholder={`Option ${(index+1).toString()}`}  />
+                      </Form.Item>
+                    
                     {fields.length > 1 ? (
                     <MinusCircleOutlined
-                      className="dynamic-delete-button"
                       style={{ margin: '0 8px' }}
                       onClick={() => {
                         remove(field.name);
                       }}
                     />
                   ) : null}
-                    </div>
                     
-                  </Form.Item>
+                    
+                 
                   
                 </Form.Item>
               ))}
@@ -132,13 +133,17 @@ return(
         <Checkbox>Require captcha</Checkbox>
       </Form.Item>
 
-      <Form.Item  name="ban_tor"  valuePropName="checked">
+      <Form.Item  name="ban_tor"  style={{margin:0}}  valuePropName="checked">
         <Checkbox>Ban Tor users</Checkbox>
+      </Form.Item>
+
+      <Form.Item  name="allow_multiple_answers"  valuePropName="checked">
+        <Checkbox>Allow multiple answers</Checkbox>
       </Form.Item>
 
       <Form.Item className="submit_btn">
         <Button type="primary" htmlType="submit">
-          Create Poll
+          Vote
         </Button>
       </Form.Item>
     </Form>
