@@ -27,7 +27,14 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 app.use(bodyParser.json());
-app.use(cors());
+const cors_options={
+    "origin": "http://localhost:3000",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "credentials":true,
+    "preflightContinue": false,
+    "optionsSuccessStatus": 204
+  }
+app.use(cors(cors_options));
 app.disable('x-powered-by');
 app.use(cookieParser());
 app.use(session({
@@ -57,25 +64,25 @@ app.listen(port, () => { //Uncomment if you want to use http
 
 // console.log(`Server is listening on port ${port}`);
 
-import get_poll_stats from './routes/get_poll_stats';
+import get_poll from './routes/get_poll';
 import create_poll from './routes/create_poll';
 import vote from './routes/vote';
 import js_challenge from './routes/js_challenge';
 
 
-app.get('/poll/:poll_id/', [
+app.get('/get_poll/:poll_id/', [
     // recaptcha.middleware.verify
-    ],get_poll_stats)
+    ],get_poll)
 
 app.post('/create_poll', [
-    recaptcha.middleware.verify
+    // recaptcha.middleware.verify
 ], create_poll)
     
-app.post('/poll/:poll_id/', [
+app.post('/vote', [
     recaptcha.middleware.verify
 ], vote)
 
 app.post('/get_challenge', [
-    recaptcha.middleware.verify
+    // recaptcha.middleware.verify
 ], js_challenge)
 
