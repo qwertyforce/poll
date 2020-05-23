@@ -20,6 +20,11 @@
   padding: 24px;
   min-height: 280px;
 }
+.ant-form-item-control-input-content{
+  display: inline-flex!important;
+  width: 100%!important;
+  align-items: center!important;
+}
 .logo {
   width: 120px;
   height: 31px;
