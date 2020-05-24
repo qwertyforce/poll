@@ -27,7 +27,7 @@ async function vote (req:Request,res:Response){
     }
     const poll=(await find_poll_by_id(poll_id))[0]
     if(!poll){
-        return res.status(403).json({
+        return res.status(404).json({
             message: "poll not found"
         })
     }
