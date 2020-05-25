@@ -15,17 +15,18 @@ async function create_poll(req: Request, res: Response) {
         typeof allow_multiple_answers === 'boolean' &&
         Array.isArray(req.body.options) &&
         req.body.options.length>0) {
-        console.log(5)
         let options=[]
         for (let i = 0; i < req.body.options.length; i++) {
             if (typeof req.body.options[i] === "string") {
                 options.push({text: req.body.options[i], votes: 0 })
             } else {
-                return res.send("Bad options")
+                return res.sendStatus(403)
             }
         }
         const poll_id = await create_new_poll(question, options,security_level, require_captcha, ban_tor,allow_multiple_answers)
         res.send(poll_id)
+    }else{
+        res.sendStatus(403)
     }
 }
 
