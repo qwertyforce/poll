@@ -15,7 +15,6 @@ async function vote (req:Request,res:Response){
     const poll_id: string = req.body.poll_id
     const votes: string[] = req.body.votes
     if(typeof poll_id!=="string" || !Array.isArray(votes)){
-        console.log(votes)
         return res.status(403).json({
             message: "bad input"
         });

@@ -10,7 +10,6 @@ async function get_poll(req: Request, res: Response) {
         if(poll.length===0){
             return res.sendStatus(404)
         }
-        console.log(poll)
         poll=poll[0]
         if((req.session && req.session.voted && req.session.voted.includes(poll_id))||(poll.security_level>1 && poll.ips.includes(req.ip))){ //if voted (cookie||ip)
             const data={question:poll.question,options:poll.options}
