@@ -82,7 +82,7 @@ app.post('/vote', [
     recaptcha.middleware.verify
 ], vote)
 
-app.post('/get_challenge', [
+app.get('/get_challenge/:poll_id/', [
     // recaptcha.middleware.verify
 ], js_challenge)
 

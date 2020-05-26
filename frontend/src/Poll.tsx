@@ -33,6 +33,7 @@ function Poll(){
   const [options, setOptions] = React.useState<any[]>();
   const [multiple_choice, setMultipleChoice] = React.useState();
   const [require_captcha, setRequireCaptcha] = React.useState();
+  const [js_challenge, setJsChallenge] = React.useState(false);
   const [loading_text, setLoadingText] = React.useState("loading");
   let { id } = useParams();
   const vote_props={
@@ -40,6 +41,7 @@ function Poll(){
     options:options,
     setOptions:setOptions,
     multiple_choice:multiple_choice,
+    js_challenge:js_challenge,
     require_captcha:require_captcha,
     id:id
   }
@@ -49,8 +51,9 @@ function Poll(){
   }
   React.useEffect(()=>{
     axios(`http://localhost/get_poll/${id}`, {
-      method: "get"
+      method: "get",withCredentials: true
     }).then((resp)=>{
+      setJsChallenge(resp.data.security_level>2)
       setRequireCaptcha(resp.data.require_captcha)
       setOptions(resp.data.options)
       setQuestion(resp.data.question)
@@ -82,11 +85,32 @@ function Poll(){
 }
 
 function Vote(props:any){
-  const vote = (token:string,values:any) => {
+  
+
+  const _vote = (token: string, values: any) => {
+    console.log(props.js_challenge)
+    if (props.js_challenge) {
+      axios(`http://localhost/get_challenge/${props.id}`, {
+        withCredentials: true
+      }).then((resp) => {
+        console.log(resp.data)
+        // eslint-disable-next-line no-eval
+        resp.data.answer=(eval.call(window,atob(resp.data.challenge))).toString()
+        vote(token,values,resp.data)
+      }).catch((err) => {
+        console.log(err)
+      })
+    } else {
+      vote(token, values, 0)
+    }
+  }
+
+  const vote = (token:string,values:any,js_challenge:any) => {
     let data={
       poll_id:props.id,
       votes:values.choices,
-      'g-recaptcha-response': token
+      'g-recaptcha-response': token,
+      js_challenge:js_challenge
     }
     if(!Array.isArray(data.votes)){data.votes=[data.votes]}
     axios("http://localhost/vote", {
@@ -97,29 +121,29 @@ function Vote(props:any){
       props.setOptions(resp.data)
       console.log(resp)
     }).catch((err) => {
-
+      console.log(err)
     })
-  };
-  const _vote = (values:any) => {
-    if(props.require_captcha){
-      grecaptcha.ready(function() {
-        grecaptcha.execute('6LcqV9QUAAAAAEybBVr0FWnUnFQmOVxGoQ_Muhtb', {action: 'login'}).then(function(token:string) {
-          vote(token,values)
+  }
+
+  const __vote = (values:any) => {
+    if (props.require_captcha) {
+      grecaptcha.ready(function () {
+        grecaptcha.execute('6LcqV9QUAAAAAEybBVr0FWnUnFQmOVxGoQ_Muhtb', { action: 'login' }).then(function (token: string) {
+          _vote(token, values)
         });
-        })
-    }else{
-      vote("",values)
-    }
-    
+      })
+    } else {
+      _vote("", values)
+    } 
 }
   const onFinish = (values: any) => {    
-    _vote(values)
+    __vote(values)
     console.log('Success:', values);
-  };
+  }
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Failed:', errorInfo);
-  };
+  }
 
 return(  
   <Card>
