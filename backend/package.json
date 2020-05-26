@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+  	"start": "tsc&&node ./dist/index.js",
     "test": "tsc&jest --coverage --forceExit"
   },
   "keywords": [],
@@ -32,6 +33,7 @@
     "express-recaptcha": "^5.0.1",
     "express-session": "^1.17.1",
     "https": "^1.0.0",
+    "javascript-obfuscator": "^0.28.2",
     "typescript": "^3.9.3"
   }
 }

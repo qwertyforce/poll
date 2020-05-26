@@ -1,6 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 import {Request, Response} from 'express';
 import {find_poll_by_id,vote_by_id,add_ip} from './../helpers/db_ops'
+import crypto from 'crypto'
+const SALT="qwfhuiiokjhgfygtyukiomnjhbgfhtrghyukiomjkhbvcfdrtyujiknbvgftyujhnm,lkoiuhgfcxdsertyghnmjkiouyhgcfxdrtyghnm,klijhgvcxdfrtyghjkjnbvcfdrt65789ijkhg"
 
 function is_valid_option(checked_option:string,options:any[]){
 for (const option of options) {
@@ -14,6 +16,7 @@ return false
 async function vote (req:Request,res:Response){
     const poll_id: string = req.body.poll_id
     const votes: string[] = req.body.votes
+    const js_challenge:any=req.body.js_challenge
     if(typeof poll_id!=="string" || !Array.isArray(votes)){
         return res.status(403).json({
             message: "bad input"
@@ -36,6 +39,32 @@ async function vote (req:Request,res:Response){
             message: "already voted (ip)"
         })
     }
+    if (poll.security_level > 2) {
+        if (typeof js_challenge === "object" &&
+            typeof js_challenge.challenge === "string" &&
+            typeof js_challenge.answer === "string" &&
+            typeof js_challenge.expire_time === "string" &&
+            typeof js_challenge.hash === "string") {
+            if (js_challenge.expire_time > Math.round(new Date().getTime() / 1000)) { //if not expired
+                const str_to_hash = js_challenge.challenge + js_challenge.expire_time+ js_challenge.answer + SALT
+                const hash = crypto.createHash('sha256').update(str_to_hash).digest('base64')
+                if (js_challenge.hash !== hash) {
+                    return res.status(403).json({
+                        message: "wrong answer"
+                    });
+                }
+            } else {
+                return res.status(403).json({
+                    message: "challenge has expired"
+                });
+            }
+        } else {
+            return res.status(403).json({
+                message: "challenge incorrect input"
+            });
+        }
+    }
+
     if(poll.ban_tor){
         //check if user is using Tor
     }
