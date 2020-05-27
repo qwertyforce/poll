@@ -157,7 +157,7 @@ return(
     {props.multiple_choice&&(props.options)? (
       <Checkbox.Group >
                 {props.options.map((option:any, index:string) => (
-                  <Checkbox style={checkbox_radio_style} key={index} value={option.text}>
+                  <Checkbox style={checkbox_radio_style} key={index} value={index}>
                    {option.text}
                   </Checkbox>
                 ))}
@@ -167,7 +167,7 @@ return(
 
         <Radio.Group>
            {props.options.map((option:any, index:string) => (
-                  <Radio style={checkbox_radio_style} key={index} value={option.text}>
+                  <Radio style={checkbox_radio_style} key={index} value={index}>
                     {option.text}
                    </Radio>
 
@@ -180,7 +180,7 @@ return(
 
   <Form.Item className="submit_btn">
     <Button type="primary" htmlType="submit">
-      Create Poll
+      Vote
 </Button>
   </Form.Item>
 </Form>

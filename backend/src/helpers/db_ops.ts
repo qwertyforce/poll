@@ -78,12 +78,12 @@ export async function create_new_poll(question:string,options:Object[],security_
     return id
 }
 
-export async function vote_by_id(poll_id: string, options: string[]) {
+export async function vote_by_id(poll_id: string, options: number[]) {
     const collection = client.db(db_main).collection("polls");
     const result = collection.findOneAndUpdate(
         { id: poll_id },
         { $inc: { "options.$[t].votes": 1 }, },
-        { arrayFilters: [{ "t.text": { $in: options } }], returnOriginal: false },
+        { arrayFilters: [{ "t.id": { $in: options } }], returnOriginal: false },
     )
     return result
 }
