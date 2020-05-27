@@ -4,18 +4,10 @@ import {find_poll_by_id,vote_by_id,add_ip} from './../helpers/db_ops'
 import crypto from 'crypto'
 const SALT="qwfhuiiokjhgfygtyukiomnjhbgfhtrghyukiomjkhbvcfdrtyujiknbvgftyujhnm,lkoiuhgfcxdsertyghnmjkiouyhgcfxdrtyghnm,klijhgvcxdfrtyghjkjnbvcfdrt65789ijkhg"
 
-function is_valid_option(checked_option:string,options:any[]){
-for (const option of options) {
-    if(checked_option===option.text){
-        return true
-    }
-}
-return false
-}
 
 async function vote (req:Request,res:Response){
     const poll_id: string = req.body.poll_id
-    const votes: string[] = req.body.votes
+    const votes: number[] = req.body.votes
     const js_challenge:any=req.body.js_challenge
     if(typeof poll_id!=="string" || !Array.isArray(votes)){
         return res.status(403).json({
@@ -86,7 +78,7 @@ async function vote (req:Request,res:Response){
     console.log(poll.allow_multiple_answers)
 
     for (const vote of votes) {
-        if(typeof vote!=='string' || !is_valid_option(vote,poll.options)){
+        if(typeof vote!=='number' && vote>votes.length-1){
             return res.status(403).json({message:'bad input'});
         }
     }

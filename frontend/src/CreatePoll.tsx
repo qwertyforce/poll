@@ -6,13 +6,15 @@ import { Card } from 'antd';
 import { Row } from 'antd';
 import { Form, Input, Button, Select,Checkbox } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {useHistory} from "react-router-dom"
 const {Content, Footer } = Layout;
 
 const { Option } = Select;
 
 
 function CreatePoll(){
-
+  const history = useHistory();
+  
   const create_poll = (token:string,values:any) => {
     let data={
       question:values.question,
@@ -27,6 +29,7 @@ function CreatePoll(){
       method: "post",
       data: data
     }).then((resp)=>{
+      history.push(`/poll/${resp.data}`)
       console.log(resp)
     }).catch((err)=>{
 

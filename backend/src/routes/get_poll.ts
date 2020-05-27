@@ -19,6 +19,7 @@ async function get_poll(req: Request, res: Response) {
             question:poll.question,
             require_captcha:poll.require_captcha,
             security_level:poll.security_level,
+            allow_multiple_answers:poll.allow_multiple_answers,
             options:poll.options.map((el: { text: string;votes:number}) => {return {text:el.text} })
         }
         res.json(data)

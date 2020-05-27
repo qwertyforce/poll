@@ -18,7 +18,7 @@ async function create_poll(req: Request, res: Response) {
         let options=[]
         for (let i = 0; i < req.body.options.length; i++) {
             if (typeof req.body.options[i] === "string") {
-                options.push({text: req.body.options[i], votes: 0 })
+                options.push({id:i,text: req.body.options[i], votes: 0 })
             } else {
                 return res.sendStatus(403)
             }
