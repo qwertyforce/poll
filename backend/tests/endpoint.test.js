@@ -34,6 +34,7 @@ describe('Post Endpoints', () => {
         allow_multiple_answers:true,
         options:["1","2","3"] 
       })
+    expect(typeof res.text).toBe("string")
     new_poll_id=res.text
     expect(res.statusCode).toEqual(200)   
   })
@@ -117,7 +118,8 @@ describe('Post Endpoints', () => {
     expect(res.body).toStrictEqual({message:'bad votes input'}) 
     expect(res.statusCode).toEqual(403)   
   })
-
+  
+  let cookie
   it('/vote should give 200 and results if everything is OK ', async () => {
     const res = await request(app)
     .post('/vote')
@@ -125,9 +127,20 @@ describe('Post Endpoints', () => {
       poll_id:new_poll_id,
       votes:[0,2]     
     })
-    console.log(res)
+    cookie=res.headers['set-cookie'][0]
     expect(res.body).toStrictEqual([{"id": 0, "text": "1", "votes": 1}, {"id": 1, "text": "2", "votes": 0}, {"id": 2, "text": "3", "votes": 1}]) 
     expect(res.statusCode).toEqual(200)   
+  })
+
+  it('/vote should give 403 if your cookie is already voted', async () => {
+    const res = await request(app)
+    .post('/vote').set('Cookie', cookie)
+    .send({
+      poll_id:new_poll_id,
+      votes:[0,2]     
+    })
+    expect(res.body).toStrictEqual({"message": "already voted (cookie)"}) 
+    expect(res.statusCode).toEqual(403)   
   })
 
   it('/vote should give 403 if your ip is already voted', async () => {
@@ -140,6 +153,26 @@ describe('Post Endpoints', () => {
     expect(res.body).toStrictEqual({"message": "already voted (ip)"}) 
     expect(res.statusCode).toEqual(403)   
   })
+
+  it('/get_poll should give 200 and poll results if you already voted', async () => {
+    const res = await request(app)
+      .get(`/get_poll/${new_poll_id}`)
+    expect(res.body).toStrictEqual({question: "test",options:[{"id": 0, "text": "1", "votes": 1}, {"id": 1, "text": "2", "votes": 0}, {"id": 2, "text": "3", "votes": 1}]})
+    expect(res.statusCode).toEqual(200)   
+  })
+
+  it('/get_challenge should give 200 and challenge', async () => {
+    const res = await request(app)
+      .get(`/get_challenge/${new_poll_id}`)
+    expect(res.body).toStrictEqual(expect.objectContaining({
+      challenge: expect.any(String),
+      expire_time: expect.any(String),
+      hash: expect.any(String)
+    }))
+    expect(res.statusCode).toEqual(200)   
+  })
+
+
 
 
 })
