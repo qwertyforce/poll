@@ -171,8 +171,32 @@ describe('Post Endpoints', () => {
     }))
     expect(res.statusCode).toEqual(200)   
   })
-
-
+  
+  it(' create poll without captcha and without allowing multiple answers for further testing ', async () => {
+    const res = await request(app)
+      .post('/create_poll')
+      .send({
+        security_level:'2',
+        question:'test',
+        require_captcha:false,
+        ban_tor:false,
+        allow_multiple_answers:false,
+        options:["1","2","3"] 
+      })
+    new_poll_id=res.text
+    expect(res.statusCode).toEqual(200)   
+  })
+  
+  it('/vote should give 403 if you try to vote for multiple options, when it is forbidden', async () => {
+    const res = await request(app)
+    .post('/vote')
+    .send({
+      poll_id:new_poll_id,
+      votes:[0,2]     
+    })
+    expect(res.body).toStrictEqual({message:'Multiple answers are not allowed'}) 
+    expect(res.statusCode).toEqual(403)   
+  })
 
 
 })
