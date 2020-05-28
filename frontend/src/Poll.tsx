@@ -5,19 +5,16 @@ import { Layout} from 'antd';
 import { Card } from 'antd';
 import { Row } from 'antd';
 import { Typography } from 'antd';
-import { Form, Input, Button, Select,Checkbox } from 'antd';
+import { Form, Button,Checkbox } from 'antd';
 import { Radio} from 'antd';
 
-import {
-  BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ReferenceLine, ResponsiveContainer,
-} from 'recharts';
+import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer} from 'recharts';
 
 
 import {useParams} from "react-router-dom";
 const { Title } = Typography;
 const {Content, Footer } = Layout;
 
-const { Option } = Select;
 
 const checkbox_radio_style = {
   display: 'block',
@@ -128,7 +125,7 @@ function Vote(props:any){
   const __vote = (values:any) => {
     if (props.require_captcha) {
       grecaptcha.ready(function () {
-        grecaptcha.execute('6LcqV9QUAAAAAEybBVr0FWnUnFQmOVxGoQ_Muhtb', { action: 'login' }).then(function (token: string) {
+        grecaptcha.execute('6LcqV9QUAAAAAEybBVr0FWnUnFQmOVxGoQ_Muhtb', { action: 'vote' }).then(function (token: string) {
           _vote(token, values)
         });
       })
