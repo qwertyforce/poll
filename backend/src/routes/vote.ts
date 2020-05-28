@@ -2,6 +2,7 @@
 import {Request, Response} from 'express';
 import {find_poll_by_id,vote_by_id,add_ip} from './../helpers/db_ops'
 import crypto from 'crypto'
+const IsTorExit = require("istorexit");
 const SALT="qwfhuiiokjhgfygtyukiomnjhbgfhtrghyukiomjkhbvcfdrtyujiknbvgftyujhnm,lkoiuhgfcxdsertyghnmjkiouyhgcfxdrtyghnm,klijhgvcxdfrtyghjkjnbvcfdrt65789ijkhg"
 
 
@@ -58,7 +59,11 @@ async function vote (req:Request,res:Response){
     }
 
     if(poll.ban_tor){
-        //check if user is using Tor
+        if(IsTorExit(req.ip)){
+            return res.status(403).json({
+                message: "Tor is not allowed"
+            }); 
+        }
     }
 
     if(votes.length>poll.options.length){ // check if user is trying to vote for more options than there is 
@@ -73,19 +78,15 @@ async function vote (req:Request,res:Response){
         });
     }
 
-    console.log(poll_id)
-    console.log(poll)
-    console.log(poll.allow_multiple_answers)
-
     for (const vote of votes) {
-        if(typeof vote!=='number' && vote>votes.length-1){
-            return res.status(403).json({message:'bad input'});
+        if(typeof vote!=='number' || vote>poll.options.length-1){
+            return res.status(403).json({message:'bad votes input'});
         }
     }
 
     if(poll.allow_multiple_answers || votes.length===1 ){
         const result=await vote_by_id(poll_id,votes) 
-        if(req.session!.voted){
+        if(req.session!.voted){ //if voted array exists
             req.session!.voted.push(poll_id)
             
         }else{
@@ -95,7 +96,6 @@ async function vote (req:Request,res:Response){
             add_ip(poll_id,req.ip)
         }
         res.json(result.value.options)
-        console.log(result.value.options)
     }else{
         return res.status(403).json({message:'Multiple answers are not allowed'}); 
     }
