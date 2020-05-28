@@ -77,7 +77,6 @@ function js_challenge (req:Request,res:Response){
         });
     }
     const {challenge,answer} : { challenge: string; answer: string }=generate_challenge()
-    console.log(answer)
     const expire_time=(Math.round(new Date().getTime()/1000)+60).toString()    //1 minute
     const str_to_hash=challenge+expire_time+answer+SALT
     const hash=crypto.createHash('sha256').update(str_to_hash).digest('base64')

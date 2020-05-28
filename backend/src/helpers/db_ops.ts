@@ -20,10 +20,7 @@ async function findDocuments(collection_name:string, selector:object) {
     let result = collection.find(selector).toArray()
     return result
 }
-async function removeDocument(collection_name:string, selector:object) {
-    const collection = client.db(db_main).collection(collection_name);
-    collection.deleteOne(selector)
-}
+
 
 async function insertDocuments(collection_name:string, documents:Object[]) {
     const collection = client.db(db_main).collection(collection_name);

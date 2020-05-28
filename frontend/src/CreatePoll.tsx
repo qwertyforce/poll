@@ -14,8 +14,8 @@ const { Option } = Select;
 
 function CreatePoll(){
   const history = useHistory();
-  
-  const create_poll = (token:string,values:any) => {
+
+  const create_poll = (values:any) => {
     let data={
       question:values.question,
       security_level:values.fraud_prevention,
@@ -23,7 +23,6 @@ function CreatePoll(){
       ban_tor:values.ban_tor,
       options:values.options,
       allow_multiple_answers:values.allow_multiple_answers,
-      'g-recaptcha-response': token
     }
     axios("http://localhost/create_poll", {
       method: "post",
@@ -35,15 +34,9 @@ function CreatePoll(){
 
     })
   };
-  const _create_poll = (values:any) => {
-    grecaptcha.ready(function() {
-      grecaptcha.execute('6LcqV9QUAAAAAEybBVr0FWnUnFQmOVxGoQ_Muhtb', {action: 'login'}).then(function(token:string) {
-        create_poll(token,values)
-      });
-      })
-}
+
   const onFinish = (values: any) => {
-    _create_poll(values)
+    create_poll(values)
     console.log('Success:', values);
   };
 
@@ -146,7 +139,7 @@ return(
 
       <Form.Item className="submit_btn">
         <Button type="primary" htmlType="submit">
-          Vote
+          Create Poll
         </Button>
       </Form.Item>
     </Form>

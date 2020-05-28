@@ -57,10 +57,15 @@ app.listen(port, () => { //Uncomment if you want to use http
     console.log(`Server is listening on port ${port}`);
 });
 
-//  https.createServer({
+//  const server = https.createServer({
 //       key: fs.readFileSync('privkey.pem'),
 //       cert: fs.readFileSync('cert.pem')
 //     }, app).listen(port);
+
+// setInterval(function () {server.setSecureContext({
+//     cert: fs.readFileSync('cert.pem', 'utf8'),//fullchain
+//     key: fs.readFileSync('privkey.pem', 'utf8')
+//   })},86400000)
 
 // console.log(`Server is listening on port ${port}`);
 
