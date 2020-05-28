@@ -59,7 +59,11 @@ async function vote (req:Request,res:Response){
     }
 
     if(poll.ban_tor){
-        if(IsTorExit(req.ip)){
+        let ip = req.ip
+        if (ip.substr(0, 7) === "::ffff:") {
+            ip = ip.substr(7)
+        }
+        if(await IsTorExit(ip)){
             return res.status(403).json({
                 message: "Tor is not allowed"
             }); 
@@ -72,7 +76,7 @@ async function vote (req:Request,res:Response){
         });
     }
 
-    if ( (req as any).recaptcha.error && poll.require_captcha) {    //(req as any) dirty hack, something is wrong with typings  
+    if (poll.require_captcha && ((req as any).recaptcha.error || (req as any).recaptcha.data.score<0.5)) {    //(req as any) dirty hack, something is wrong with typings  
         return res.status(403).json({
             message: "Captcha error"
         });
