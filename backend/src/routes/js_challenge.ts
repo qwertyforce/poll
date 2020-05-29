@@ -52,6 +52,7 @@ function generate_challenge() {
         deadCodeInjectionThreshold: 0.4,
         debugProtection: false,
         debugProtectionInterval: false,
+        domainLock:["localhost"],
         disableConsoleOutput: false,
         identifierNamesGenerator: 'hexadecimal',
         log: false,

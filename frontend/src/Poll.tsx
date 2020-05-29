@@ -97,7 +97,8 @@ function Vote(props:any){
         resp.data.answer=(eval.call(window,atob(resp.data.challenge))).toString()
         vote(token,values,resp.data)
       }).catch((err) => {
-        console.log(err)
+      setErrorText("js challenge error")
+      setAlertVisible(true)
       })
     } else {
       vote(token, values, 0)
