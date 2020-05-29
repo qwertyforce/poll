@@ -10,7 +10,7 @@ import {useHistory} from "react-router-dom"
 const {Content, Footer } = Layout;
 
 const { Option } = Select;
-
+const SERVER_URL="http://localhost"
 
 function CreatePoll(){
   const history = useHistory();
@@ -24,7 +24,7 @@ function CreatePoll(){
       options:values.options,
       allow_multiple_answers:values.allow_multiple_answers,
     }
-    axios("http://localhost/create_poll", {
+    axios(`${SERVER_URL}/create_poll`, {
       method: "post",
       data: data
     }).then((resp)=>{

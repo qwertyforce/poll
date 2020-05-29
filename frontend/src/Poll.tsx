@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import axios from 'axios';
-import { Layout} from 'antd';
+import { Layout, Alert} from 'antd';
 import { Card } from 'antd';
 import { Row } from 'antd';
 import { Typography } from 'antd';
@@ -15,6 +15,7 @@ import {useParams} from "react-router-dom";
 const { Title } = Typography;
 const {Content, Footer } = Layout;
 
+const SERVER_URL="http://localhost"
 
 const checkbox_radio_style = {
   display: 'block',
@@ -47,7 +48,7 @@ function Poll(){
     options:options
   }
   React.useEffect(()=>{
-    axios(`http://localhost/get_poll/${id}`, {
+    axios(`${SERVER_URL}/get_poll/${id}`, {
       method: "get",withCredentials: true
     }).then((resp)=>{
       setJsChallenge(resp.data.security_level>2)
@@ -82,12 +83,13 @@ function Poll(){
 }
 
 function Vote(props:any){
-  
+  const [alert_visible, setAlertVisible] = React.useState(false);
+  const [error_text, setErrorText] = React.useState("");
 
   const _vote = (token: string, values: any) => {
     console.log(props.js_challenge)
     if (props.js_challenge) {
-      axios(`http://localhost/get_challenge/${props.id}`, {
+      axios(`${SERVER_URL}/get_challenge/${props.id}`, {
         withCredentials: true
       }).then((resp) => {
         console.log(resp.data)
@@ -110,7 +112,7 @@ function Vote(props:any){
       js_challenge:js_challenge
     }
     if(!Array.isArray(data.votes)){data.votes=[data.votes]}
-    axios("http://localhost/vote", {
+    axios(`${SERVER_URL}/vote`, {
       method: "post",
       data: data,
       withCredentials: true
@@ -118,6 +120,8 @@ function Vote(props:any){
       props.setOptions(resp.data)
       console.log(resp)
     }).catch((err) => {
+      setErrorText(err.response.data.message)
+      setAlertVisible(true)
       console.log(err)
     })
   }
@@ -174,7 +178,11 @@ return(
       )
     }
   </Form.Item>
-
+  <div>
+      {alert_visible ? (
+        <Alert message={error_text} type="error" style={{marginBottom:"20px"}} showIcon />
+      ) : null}
+    </div>
   <Form.Item className="submit_btn">
     <Button type="primary" htmlType="submit">
       Vote
