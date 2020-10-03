@@ -41,7 +41,7 @@ app.use(session({
         sameSite: 'lax'
     },
     store: new MongoStore({
-        url: config.mongodb_url+'poll',
+        url: config.mongodb_url+'poll?authSource=admin',
         ttl: 14 * 24 * 60 * 60
     }) // = 14 days. Default 
 }))

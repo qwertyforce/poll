@@ -44,12 +44,12 @@ app.use(session({
         sameSite: 'lax'
     },
     store: new MongoStore({
-        url: config.mongodb_url+ 'poll',
+        url: config.mongodb_url+ 'poll?authSource=admin',
         ttl: 14 * 24 * 60 * 60
     }) // = 14 days. Default 
 }))
 
-const port = 80;
+const port = config.server_port;
 app.set('trust proxy','127.0.0.1')
 app.listen(port,'localhost', () => { //Uncomment if you want to use http
     console.log(`Server is listening on port ${port}`);
