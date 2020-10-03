@@ -5,7 +5,7 @@ import session from 'express-session';
 const MongoStore = require('connect-mongo')(session);
 import rateLimit from "express-rate-limit";
 import cors from 'cors';
-import config from '../../config/config'
+import config from '../config/config'
 import https from 'https';
 import path from 'path';
 const Recaptcha = require('express-recaptcha').RecaptchaV3;

@@ -6,7 +6,7 @@ const MongoStore = require('connect-mongo')(session);
 import rateLimit from "express-rate-limit";
 import cors from 'cors';
 const Recaptcha = require('express-recaptcha').RecaptchaV3;
-import config from '../../config/config'
+import config from '../config/config'
 const app = express();
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 const cors_options={
-    "origin": "http://localhost:3000",
+    "origin": config.front_end_server_url,
     "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
     "credentials":true,
     "preflightContinue": false,
@@ -50,7 +50,8 @@ app.use(session({
 }))
 
 const port = 80;
-app.listen(port, () => { //Uncomment if you want to use http
+app.set('trust proxy','127.0.0.1')
+app.listen(port,'localhost', () => { //Uncomment if you want to use http
     console.log(`Server is listening on port ${port}`);
 });
 

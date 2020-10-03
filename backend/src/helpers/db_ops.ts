@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-import config from '../../../config/config'
+import config from '../../config/config'
 var url = config.mongodb_url;
 import crypto from "crypto"
 var options = {

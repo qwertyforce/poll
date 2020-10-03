@@ -12,8 +12,7 @@ const {Content, Footer } = Layout;
 
 const { Option } = Select;
 
-const SERVER_URL=config.domain
-
+const SERVER_URL=config.backend_server_url
 function CreatePoll(){
   const history = useHistory();
 

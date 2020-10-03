@@ -17,7 +17,7 @@ const { Title } = Typography;
 const {Content, Footer } = Layout;
 
 
-const SERVER_URL=config.domain
+const SERVER_URL=config.backend_server_url
 
 
 const checkbox_radio_style = {
