@@ -5,6 +5,7 @@ import session from 'express-session';
 const MongoStore = require('connect-mongo')(session);
 import rateLimit from "express-rate-limit";
 import cors from 'cors';
+import config from '../../config/config'
 import https from 'https';
 import path from 'path';
 const Recaptcha = require('express-recaptcha').RecaptchaV3;
@@ -40,7 +41,7 @@ app.use(session({
         sameSite: 'lax'
     },
     store: new MongoStore({
-        url: 'mongodb://localhost/user_data',
+        url: config.mongodb_url+'poll',
         ttl: 14 * 24 * 60 * 60
     }) // = 14 days. Default 
 }))

@@ -5,17 +5,14 @@ import session from 'express-session';
 const MongoStore = require('connect-mongo')(session);
 import rateLimit from "express-rate-limit";
 import cors from 'cors';
-import https from 'https';
-import path from 'path';
 const Recaptcha = require('express-recaptcha').RecaptchaV3;
-import fs from 'fs';
-
+import config from '../../config/config'
 const app = express();
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 100 // limit each IP to 100 requests per windowMs
 });
-const recaptcha = new Recaptcha('6LcqV9QUAAAAAEybBVr0FWnUnFQmOVxGoQ_Muhtb', '6LcqV9QUAAAAAOA18kbCEWRBhF4g4LjSTaFRVe9P');
+const recaptcha = new Recaptcha(config.recaptcha_site_key,config.recaptcha_secret_key);
 app.use(limiter);
 app.use(function (req, res, next) {
   res.setHeader('X-Content-Type-Options', "nosniff")
@@ -47,7 +44,7 @@ app.use(session({
         sameSite: 'lax'
     },
     store: new MongoStore({
-        url: 'mongodb://localhost/user_data',
+        url: config.mongodb_url+ 'poll',
         ttl: 14 * 24 * 60 * 60
     }) // = 14 days. Default 
 }))

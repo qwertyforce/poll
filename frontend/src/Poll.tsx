@@ -12,10 +12,13 @@ import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer
 
 
 import {useParams} from "react-router-dom";
+import config from './config'
 const { Title } = Typography;
 const {Content, Footer } = Layout;
 
-const SERVER_URL="http://localhost"
+
+const SERVER_URL=config.domain
+
 
 const checkbox_radio_style = {
   display: 'block',
@@ -130,7 +133,7 @@ function Vote(props:any){
   const __vote = (values:any) => {
     if (props.require_captcha) {
       grecaptcha.ready(function () {
-        grecaptcha.execute('6LcqV9QUAAAAAEybBVr0FWnUnFQmOVxGoQ_Muhtb', { action: 'vote' }).then(function (token: string) {
+        grecaptcha.execute(config.recaptcha_site_key, { action: 'vote' }).then(function (token: string) {
           _vote(token, values)
         });
       })

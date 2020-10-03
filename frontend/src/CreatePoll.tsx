@@ -7,10 +7,12 @@ import { Row } from 'antd';
 import { Form, Input, Button, Select,Checkbox } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {useHistory} from "react-router-dom"
+import config from './config'
 const {Content, Footer } = Layout;
 
 const { Option } = Select;
-const SERVER_URL="http://localhost"
+
+const SERVER_URL=config.domain
 
 function CreatePoll(){
   const history = useHistory();

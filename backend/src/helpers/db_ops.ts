@@ -1,11 +1,12 @@
 var MongoClient = require('mongodb').MongoClient;
-var url = 'mongodb://localhost/';
+import config from '../../../config/config'
+var url = config.mongodb_url;
 import crypto from "crypto"
 var options = {
     useNewUrlParser: true,
     useUnifiedTopology: true
 };
-const db_main = 'user_data';
+const db_main = 'poll';
 const client = new MongoClient(url, options);
 client.connect(function(err: any) {
     if (err) {
