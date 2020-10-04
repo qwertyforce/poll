@@ -2,7 +2,7 @@
 import {Request, Response} from 'express';
 import crypto from 'crypto'
 import JavaScriptObfuscator from 'javascript-obfuscator';
-
+import config from '../../config/config'
 const SALT="qwfhuiiokjhgfygtyukiomnjhbgfhtrghyukiomjkhbvcfdrtyujiknbvgftyujhnm,lkoiuhgfcxdsertyghnmjkiouyhgcfxdrtyghnm,klijhgvcxdfrtyghjkjnbvcfdrt65789ijkhg"
 
 function randomInteger(min:number, max:number) {
@@ -52,7 +52,7 @@ function generate_challenge() {
         deadCodeInjectionThreshold: 0.4,
         debugProtection: false,
         debugProtectionInterval: false,
-        domainLock:["localhost"],
+        domainLock:[config.front_end_domain],
         disableConsoleOutput: false,
         identifierNamesGenerator: 'hexadecimal',
         log: false,
