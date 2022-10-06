@@ -35,6 +35,6 @@
     "express-session": "^1.17.1",
     "https": "^1.0.0",
     "istorexit": "^0.10.1",
-    "javascript-obfuscator": "^0.28.2"
+    "javascript-obfuscator": "^4.0.0"
   }
 }
